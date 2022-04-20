@@ -18,7 +18,7 @@ var (
 			baseConvertScreen},
 		"time_convert": {"time_convert",
 			"time_convert",
-			convertScreen},
+			timeConvertScreen},
 		"case_convert": {"case_convert",
 			"case_convert",
 			convertScreen},

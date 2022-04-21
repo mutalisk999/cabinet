@@ -6,9 +6,11 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"github.com/atotto/clipboard"
+	"github.com/cleanmachine1/capitalise"
 	"github.com/mutalisk999/cabinet/utils"
 	"math/big"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -201,5 +203,63 @@ func timeConvertScreen(_ fyne.Window) fyne.CanvasObject {
 				_ = clipboard.WriteAll(localDateTimeEntryValidated.Text)
 			})),
 			localDateTimeEntryValidated, nil, nil),
+	)
+}
+
+func caseConvertScreen(_ fyne.Window) fyne.CanvasObject {
+	caseOriginEntryValidated := utils.NewCaseOriginEntry()
+	caseOriginEntryValidated.SetPlaceHolder("Must contain a string contains numbers/alphabets/underscore character/space character")
+
+	radioGroup := widget.NewRadioGroup([]string{
+		"UPPER CASE", "lower case", "Capital case", "Title Case",
+		"camelCase", "PascalCase", "snake_case", "CONSTANT_CASE"}, nil)
+	radioGroup.Horizontal = true
+	caseResultEntryValidated := utils.NewCaseResultEntry()
+
+	caseConvert := func(valStr string) {
+		if caseOriginEntryValidated.Validate() != nil {
+			return
+		}
+		if radioGroup.Selected == "" {
+			return
+		}
+		caseOrigin := caseOriginEntryValidated.Text
+		caseResult := ""
+		radioSelected := radioGroup.Selected
+		if radioSelected == "UPPER CASE" {
+			caseResult = strings.ToUpper(caseOrigin)
+		} else if radioSelected == "lower case" {
+			caseResult = strings.ToLower(caseOrigin)
+		} else if radioSelected == "Capital case" {
+			caseResult = capitalise.First(strings.ToLower(caseOrigin))
+		} else if radioSelected == "Title Case" {
+			caseResult = strings.Title(strings.ToLower(caseOrigin))
+		} else if radioSelected == "camelCase" {
+
+		} else if radioSelected == "PascalCase" {
+
+		} else if radioSelected == "snake_case" {
+
+		} else if radioSelected == "CONSTANT_CASE" {
+
+		}
+		caseResultEntryValidated.SetText(caseResult)
+	}
+	caseOriginEntryValidated.OnChanged = caseConvert
+	radioGroup.OnChanged = caseConvert
+
+	return container.NewVBox(
+		widget.NewSeparator(),
+		container.NewBorder(
+			widget.NewLabelWithStyle("Please input a string contains numbers/alphabets/underscore character/space character:", fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}),
+			caseOriginEntryValidated, nil, nil), radioGroup,
+		widget.NewSeparator(),
+		container.NewBorder(container.NewBorder(nil, nil,
+			widget.NewLabelWithStyle("Conversion Result:",
+				fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}),
+			widget.NewButton("copy to clipboard", func() {
+				_ = clipboard.WriteAll(caseResultEntryValidated.Text)
+			})),
+			caseResultEntryValidated, nil, nil),
 	)
 }

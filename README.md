@@ -3,8 +3,8 @@
 
 * conversion
     - base convert (bin/oct/dec/hex)
-    - time convert (timestamp/gmtime/localtime)
-    - case convert (upper/lower/capital(sentence)/capital(title)/camel/pascal/snake/constant)
+    - time convert (timestamp/utctime/localtime)
+    - case convert (upper/lower/capital/capital(word)/camel/pascal/snake/constant)
 
 * encode/decode
     - base64 (base16/base64/base58)

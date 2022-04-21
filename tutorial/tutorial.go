@@ -21,7 +21,7 @@ var (
 			timeConvertScreen},
 		"case_convert": {"case_convert",
 			"case_convert",
-			convertScreen},
+			caseConvertScreen},
 		"encode": {"encode",
 			"encode",
 			convertScreen},

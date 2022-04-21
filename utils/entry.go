@@ -149,3 +149,28 @@ func NewDateTimeEntry() *dateTimeEntry {
 	e.Validator = validation.NewRegexp(dateTimeRegexPattern, "Must contain a date time string, such as 1970/01/01 00:00:00")
 	return e
 }
+
+type caseOriginEntry struct {
+	widget.Entry
+}
+
+func NewCaseOriginEntry() *caseOriginEntry {
+	e := &caseOriginEntry{}
+	e.MultiLine = true
+	e.Wrapping = fyne.TextWrapBreak
+	e.ExtendBaseWidget(e)
+	e.Validator = validation.NewRegexp(`^[0-9a-zA-Z_ ]*$`, "Must contain a string contains numbers/alphabets/underscore character/space character")
+	return e
+}
+
+type caseResultEntry struct {
+	widget.Entry
+}
+
+func NewCaseResultEntry() *caseResultEntry {
+	e := &caseResultEntry{}
+	e.MultiLine = true
+	e.Wrapping = fyne.TextWrapBreak
+	e.ExtendBaseWidget(e)
+	return e
+}

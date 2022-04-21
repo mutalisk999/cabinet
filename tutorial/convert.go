@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"github.com/atotto/clipboard"
 	"github.com/cleanmachine1/capitalise"
+	"github.com/iancoleman/strcase"
 	"github.com/mutalisk999/cabinet/utils"
 	"math/big"
 	"strconv"
@@ -235,13 +236,13 @@ func caseConvertScreen(_ fyne.Window) fyne.CanvasObject {
 		} else if radioSelected == "Title Case" {
 			caseResult = strings.Title(strings.ToLower(caseOrigin))
 		} else if radioSelected == "camelCase" {
-
+			caseResult = strcase.ToLowerCamel(caseOrigin)
 		} else if radioSelected == "PascalCase" {
-
+			caseResult = strcase.ToCamel(caseOrigin)
 		} else if radioSelected == "snake_case" {
-
+			caseResult = strcase.ToSnake(caseOrigin)
 		} else if radioSelected == "CONSTANT_CASE" {
-
+			caseResult = strcase.ToScreamingSnake(caseOrigin)
 		}
 		caseResultEntryValidated.SetText(caseResult)
 	}

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/data/validation"
 	"fyne.io/fyne/v2/widget"
 )
@@ -11,6 +12,8 @@ type binEntry struct {
 
 func NewBinEntry() *binEntry {
 	e := &binEntry{}
+	e.MultiLine = true
+	e.Wrapping = fyne.TextWrapBreak
 	e.ExtendBaseWidget(e)
 	e.Validator = validation.NewRegexp(`^[01]*$`, "Must contain a binary number")
 	return e
@@ -22,6 +25,8 @@ type octEntry struct {
 
 func NewOctEntry() *octEntry {
 	e := &octEntry{}
+	e.MultiLine = true
+	e.Wrapping = fyne.TextWrapBreak
 	e.ExtendBaseWidget(e)
 	e.Validator = validation.NewRegexp(`^[0-7]*$`, "Must contain a octal number")
 	return e
@@ -33,6 +38,8 @@ type decEntry struct {
 
 func NewDecEntry() *decEntry {
 	e := &decEntry{}
+	e.MultiLine = true
+	e.Wrapping = fyne.TextWrapBreak
 	e.ExtendBaseWidget(e)
 	e.Validator = validation.NewRegexp(`^[0-9]*$`, "Must contain a decimal number")
 	return e
@@ -44,6 +51,8 @@ type hexEntry struct {
 
 func NewHexEntry() *hexEntry {
 	e := &hexEntry{}
+	e.MultiLine = true
+	e.Wrapping = fyne.TextWrapBreak
 	e.ExtendBaseWidget(e)
 	e.Validator = validation.NewRegexp(`^[0-9a-fA-F]*$`, "Must contain a hexadecimal number")
 	return e

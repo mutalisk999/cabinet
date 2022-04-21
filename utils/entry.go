@@ -125,3 +125,18 @@ func NewSecondEntry() *secondEntry {
 	e.Validator = validation.NewRegexp(`^[0-5]?[0-9]$`, "Second")
 	return e
 }
+
+type dateTimeEntry struct {
+	widget.Entry
+}
+
+func NewDateTimeEntry() *dateTimeEntry {
+	e := &dateTimeEntry{}
+	e.ExtendBaseWidget(e)
+
+	// use strict date time format
+	//dateTimeRegexPattern := `^[1-9][0-9]{3}/(0?[1-9]|1[0-2])/(0?[1-9]|[12][0-9]|3[01]) ([01]?[0-9]|2[0-3]):[0-5]?[0-9]:[0-5]?[0-9]$`
+	dateTimeRegexPattern := `^[1-9][0-9]{3}/(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01]) ([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$`
+	e.Validator = validation.NewRegexp(dateTimeRegexPattern, "Must contain a date time string, such as 1970/01/01 00:00:00")
+	return e
+}

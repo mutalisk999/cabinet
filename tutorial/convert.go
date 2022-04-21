@@ -111,33 +111,17 @@ func timeConvertScreen(_ fyne.Window) fyne.CanvasObject {
 	timestampEntryValidated := utils.NewTimestampEntry()
 	timestampEntryValidated.SetPlaceHolder("Must contain a timestamp number")
 
-	utcYearEntryValidated := utils.NewYearEntry()
-	utcYearEntryValidated.SetPlaceHolder("Year")
-	utcMonthEntryValidated := utils.NewMonthEntry()
-	utcMonthEntryValidated.SetPlaceHolder("Month")
-	utcDayEntryValidated := utils.NewDayEntry()
-	utcDayEntryValidated.SetPlaceHolder("Day")
-	utcHourEntryValidated := utils.NewHourEntry()
-	utcHourEntryValidated.SetPlaceHolder("Hour")
-	utcMinuteEntryValidated := utils.NewMinuteEntry()
-	utcMinuteEntryValidated.SetPlaceHolder("Minute")
-	utcSecondEntryValidated := utils.NewSecondEntry()
-	utcSecondEntryValidated.SetPlaceHolder("Second")
+	utcDateTimeEntryValidated := utils.NewDateTimeEntry()
+	utcDateTimeEntryValidated.SetPlaceHolder("Must contain a date time string, such as 1970/01/01 00:00:00")
 
-	localYearEntryValidated := utils.NewYearEntry()
-	localYearEntryValidated.SetPlaceHolder("Year")
-	localMonthEntryValidated := utils.NewMonthEntry()
-	localMonthEntryValidated.SetPlaceHolder("Month")
-	localDayEntryValidated := utils.NewDayEntry()
-	localDayEntryValidated.SetPlaceHolder("Day")
-	localHourEntryValidated := utils.NewHourEntry()
-	localHourEntryValidated.SetPlaceHolder("Hour")
-	localMinuteEntryValidated := utils.NewMinuteEntry()
-	localMinuteEntryValidated.SetPlaceHolder("Minute")
-	localSecondEntryValidated := utils.NewSecondEntry()
-	localSecondEntryValidated.SetPlaceHolder("Second")
+	localDateTimeEntryValidated := utils.NewDateTimeEntry()
+	localDateTimeEntryValidated.SetPlaceHolder("Must contain a date time string, such as 1970/01/01 00:00:00")
 
 	timestampEntryValidated.OnChanged = func(valStr string) {
+		if timestampEntryValidated.Validate() != nil {
+			return
+		}
+
 		timestamp, _ := strconv.Atoi(valStr)
 		timeUtc := time.Unix(int64(timestamp), int64(0)).UTC()
 		yearUtc, monthUtc, dayUtc := timeUtc.Date()
@@ -147,68 +131,46 @@ func timeConvertScreen(_ fyne.Window) fyne.CanvasObject {
 		yearLocal, monthLocal, dayLocal := timeLocal.Date()
 		hourLocal, minuteLocal, secondLocal := timeLocal.Clock()
 
-		utcYearEntryValidated.SetText(strconv.Itoa(yearUtc))
-		utcMonthEntryValidated.SetText(strconv.Itoa(int(monthUtc)))
-		utcDayEntryValidated.SetText(strconv.Itoa(dayUtc))
-		utcHourEntryValidated.SetText(strconv.Itoa(hourUtc))
-		utcMinuteEntryValidated.SetText(strconv.Itoa(minuteUtc))
-		utcSecondEntryValidated.SetText(strconv.Itoa(secondUtc))
+		utcDateTimeEntryValidated.SetText(fmt.Sprintf("%04d/%02d/%02d %02d:%02d:%02d", yearUtc,
+			monthUtc, dayUtc, hourUtc, minuteUtc, secondUtc))
 
-		localYearEntryValidated.SetText(strconv.Itoa(yearLocal))
-		localMonthEntryValidated.SetText(strconv.Itoa(int(monthLocal)))
-		localDayEntryValidated.SetText(strconv.Itoa(dayLocal))
-		localHourEntryValidated.SetText(strconv.Itoa(hourLocal))
-		localMinuteEntryValidated.SetText(strconv.Itoa(minuteLocal))
-		localSecondEntryValidated.SetText(strconv.Itoa(secondLocal))
+		localDateTimeEntryValidated.SetText(fmt.Sprintf("%04d/%02d/%02d %02d:%02d:%02d", yearLocal,
+			monthLocal, dayLocal, hourLocal, minuteLocal, secondLocal))
 	}
 
-	utcTimeToTimestamp := func(_ string) {
-		if utcYearEntryValidated.Validate() == nil &&
-			utcMonthEntryValidated.Validate() == nil &&
-			utcDayEntryValidated.Validate() == nil &&
-			utcHourEntryValidated.Validate() == nil &&
-			utcMinuteEntryValidated.Validate() == nil &&
-			utcSecondEntryValidated.Validate() == nil {
-			year, _ := strconv.Atoi(utcYearEntryValidated.Text)
-			month, _ := strconv.Atoi(utcMonthEntryValidated.Text)
-			day, _ := strconv.Atoi(utcDayEntryValidated.Text)
-			hour, _ := strconv.Atoi(utcHourEntryValidated.Text)
-			minute, _ := strconv.Atoi(utcMinuteEntryValidated.Text)
-			second, _ := strconv.Atoi(utcSecondEntryValidated.Text)
-			utcTime := time.Date(year, time.Month(month), day, hour, minute, second, 0, time.UTC)
-			timestampEntryValidated.SetText(strconv.Itoa(int(utcTime.Unix())))
+	utcDateTimeEntryValidated.OnChanged = func(valStr string) {
+		if utcDateTimeEntryValidated.Validate() != nil {
+			return
 		}
-	}
-	utcYearEntryValidated.OnChanged = utcTimeToTimestamp
-	utcMonthEntryValidated.OnChanged = utcTimeToTimestamp
-	utcDayEntryValidated.OnChanged = utcTimeToTimestamp
-	utcHourEntryValidated.OnChanged = utcTimeToTimestamp
-	utcMinuteEntryValidated.OnChanged = utcTimeToTimestamp
-	utcSecondEntryValidated.OnChanged = utcTimeToTimestamp
 
-	localTimeToTimestamp := func(_ string) {
-		if localYearEntryValidated.Validate() == nil &&
-			localMonthEntryValidated.Validate() == nil &&
-			localDayEntryValidated.Validate() == nil &&
-			localHourEntryValidated.Validate() == nil &&
-			localMinuteEntryValidated.Validate() == nil &&
-			localSecondEntryValidated.Validate() == nil {
-			year, _ := strconv.Atoi(localYearEntryValidated.Text)
-			month, _ := strconv.Atoi(localMonthEntryValidated.Text)
-			day, _ := strconv.Atoi(localDayEntryValidated.Text)
-			hour, _ := strconv.Atoi(localHourEntryValidated.Text)
-			minute, _ := strconv.Atoi(localMinuteEntryValidated.Text)
-			second, _ := strconv.Atoi(localSecondEntryValidated.Text)
-			localTime := time.Date(year, time.Month(month), day, hour, minute, second, 0, time.Local)
-			timestampEntryValidated.SetText(strconv.Itoa(int(localTime.Unix())))
+		yearUtc, monthUtc, dayUtc := 0, 0, 0
+		hourUtc, minuteUtc, secondUtc := 0, 0, 0
+		n, err := fmt.Sscanf(valStr, "%04d/%02d/%02d %02d:%02d:%02d",
+			&yearUtc, &monthUtc, &dayUtc, &hourUtc, &minuteUtc, &secondUtc)
+		if n != 6 || err != nil {
+			return
 		}
+		utcTime := time.Date(yearUtc, time.Month(monthUtc), dayUtc,
+			hourUtc, minuteUtc, secondUtc, 0, time.UTC)
+		timestampEntryValidated.SetText(strconv.Itoa(int(utcTime.Unix())))
 	}
-	localYearEntryValidated.OnChanged = localTimeToTimestamp
-	localMonthEntryValidated.OnChanged = localTimeToTimestamp
-	localDayEntryValidated.OnChanged = localTimeToTimestamp
-	localHourEntryValidated.OnChanged = localTimeToTimestamp
-	localMinuteEntryValidated.OnChanged = localTimeToTimestamp
-	localSecondEntryValidated.OnChanged = localTimeToTimestamp
+
+	localDateTimeEntryValidated.OnChanged = func(valStr string) {
+		if localDateTimeEntryValidated.Validate() != nil {
+			return
+		}
+
+		yearLocal, monthLocal, dayLocal := 0, 0, 0
+		hourLocal, minuteLocal, secondLocal := 0, 0, 0
+		n, err := fmt.Sscanf(valStr, "%04d/%02d/%02d %02d:%02d:%02d",
+			&yearLocal, &monthLocal, &dayLocal, &hourLocal, &minuteLocal, &secondLocal)
+		if n != 6 || err != nil {
+			return
+		}
+		localTime := time.Date(yearLocal, time.Month(monthLocal), dayLocal,
+			hourLocal, minuteLocal, secondLocal, 0, time.Local)
+		timestampEntryValidated.SetText(strconv.Itoa(int(localTime.Unix())))
+	}
 
 	return container.NewVBox(
 		widget.NewSeparator(),
@@ -227,32 +189,17 @@ func timeConvertScreen(_ fyne.Window) fyne.CanvasObject {
 			widget.NewLabelWithStyle("Date & Time (UTC):",
 				fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}),
 			widget.NewButton("copy to clipboard", func() {
-				text := fmt.Sprintf("%04s/%02s/%02s %02s:%02s:%02s", utcYearEntryValidated.Text,
-					utcMonthEntryValidated.Text, utcDayEntryValidated.Text, utcHourEntryValidated.Text,
-					utcMinuteEntryValidated.Text, utcSecondEntryValidated.Text)
-				_ = clipboard.WriteAll(text)
+				_ = clipboard.WriteAll(utcDateTimeEntryValidated.Text)
 			})),
-			container.NewHBox(utcYearEntryValidated, widget.NewLabel("/"),
-				utcMonthEntryValidated, widget.NewLabel("/"),
-				utcDayEntryValidated, widget.NewLabel(" "),
-				utcHourEntryValidated, widget.NewLabel(":"),
-				utcMinuteEntryValidated, widget.NewLabel(":"),
-				utcSecondEntryValidated), nil, nil),
+			utcDateTimeEntryValidated, nil, nil),
+
 		widget.NewSeparator(),
 		container.NewBorder(container.NewBorder(nil, nil,
 			widget.NewLabelWithStyle("Date & Time (local):",
 				fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}),
 			widget.NewButton("copy to clipboard", func() {
-				text := fmt.Sprintf("%04s/%02s/%02s %02s:%02s:%02s", localYearEntryValidated.Text,
-					localMonthEntryValidated.Text, localDayEntryValidated.Text, localHourEntryValidated.Text,
-					localMinuteEntryValidated.Text, localSecondEntryValidated.Text)
-				_ = clipboard.WriteAll(text)
+				_ = clipboard.WriteAll(localDateTimeEntryValidated.Text)
 			})),
-			container.NewHBox(localYearEntryValidated, widget.NewLabel("/"),
-				localMonthEntryValidated, widget.NewLabel("/"),
-				localDayEntryValidated, widget.NewLabel(" "),
-				localHourEntryValidated, widget.NewLabel(":"),
-				localMinuteEntryValidated, widget.NewLabel(":"),
-				localSecondEntryValidated), nil, nil),
+			localDateTimeEntryValidated, nil, nil),
 	)
 }

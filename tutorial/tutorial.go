@@ -24,7 +24,7 @@ var (
 			caseConvertScreen},
 		"encode": {"encode",
 			"encode",
-			convertScreen},
+			encodeScreen},
 		"base64_encode": {"base64_encode",
 			"base64_encode",
 			convertScreen},

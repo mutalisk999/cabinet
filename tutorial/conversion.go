@@ -16,7 +16,7 @@ import (
 )
 
 func convertScreen(_ fyne.Window) fyne.CanvasObject {
-	return container.NewCenter()
+	return container.NewMax()
 }
 
 func baseConvertScreen(_ fyne.Window) fyne.CanvasObject {

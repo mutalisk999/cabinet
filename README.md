@@ -1,6 +1,10 @@
-# cabinet
+# Cabinet
 
 
+### What is cabinet
+Cabinet is a tool set for coder powered by [fyne](https://github.com/fyne-io/fyne).
+
+### Features of cabinet
 * conversion
     - base convert (bin/oct/dec/hex)
     - time convert (timestamp/utctime/localtime)
@@ -45,4 +49,10 @@
     - ecdsa key pair
     - arithmetic expression calculator
     - markdown
-    
+   
+### How To Build
+```
+git clone https://github.com/mutalisk999/cabinet
+cd cabinet
+make
+```

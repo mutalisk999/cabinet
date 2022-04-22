@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 
@@ -17,6 +18,10 @@ const (
 )
 
 var (
+	latestTag        string = ""
+	latestCommitSHA1 string = ""
+	releaseType      string = ""
+
 	topWindow fyne.Window
 )
 
@@ -100,7 +105,8 @@ func main() {
 	cabApp := app.NewWithID("cabinet")
 	logLifecycle(cabApp)
 
-	cabWin := cabApp.NewWindow("cabinet")
+	cabWinTitle := fmt.Sprintf("cabinet-%s-%s-%s", latestTag, releaseType, latestCommitSHA1)
+	cabWin := cabApp.NewWindow(cabWinTitle)
 	topWindow = cabWin
 
 	// widgets (title, introduction, view)

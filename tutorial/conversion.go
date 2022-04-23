@@ -248,6 +248,8 @@ func caseConvertScreen(_ fyne.Window) fyne.CanvasObject {
 	}
 	caseOriginEntryValidated.OnChanged = caseConvert
 	radioGroup.OnChanged = caseConvert
+	// No practical effect while caseResultEntryValidated modified
+	caseResultEntryValidated.OnChanged = caseConvert
 
 	return container.NewVBox(
 		widget.NewSeparator(),

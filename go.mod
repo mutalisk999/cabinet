@@ -7,4 +7,5 @@ require (
 	github.com/atotto/clipboard v0.1.4
 	github.com/cleanmachine1/capitalise v0.0.0-20211202000658-6c2a2efcfe9e
 	github.com/iancoleman/strcase v0.2.0
+	github.com/kirinlabs/HttpRequest v1.1.1
 )

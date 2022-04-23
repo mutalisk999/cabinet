@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+	"github.com/mutalisk999/cabinet/utils"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -94,5 +96,88 @@ func networkGetIPScreen(_ fyne.Window) fyne.CanvasObject {
 				deviceIfIPEntryValidated.SetText(ipsInfoText)
 			})),
 			deviceIfIPEntryValidated, nil, nil),
+	)
+}
+
+func networkIPMaskScreen(_ fyne.Window) fyne.CanvasObject {
+	// ip + mask bit -> mask / network ip/ broadcast ip / first valid ip / last valid ip
+	// mask bit -> mask / ip count / valid ip count
+	// ip count needed -> mask bit / mask / valid ip count
+	return container.NewMax()
+}
+
+func networkWebServerScreen(win fyne.Window) fyne.CanvasObject {
+	directorySetLabel := widget.NewLabelWithStyle("", fyne.TextAlignCenter, fyne.TextStyle{})
+	ipPortSetLabel := widget.NewLabelWithStyle("", fyne.TextAlignCenter, fyne.TextStyle{})
+	portEntry := utils.NewPortEntry()
+
+	// get all ip addresses
+	allInterfaceIps := make([]string, 0)
+	interfaceAddrs, err := net.InterfaceAddrs()
+	if err != nil {
+		dialog.ShowError(err, win)
+	}
+	for _, addr := range interfaceAddrs {
+		ipNet, isValidIpNet := addr.(*net.IPNet)
+		if isValidIpNet && ipNet.IP.To4() != nil {
+			allInterfaceIps = append(allInterfaceIps, ipNet.IP.String())
+		}
+	}
+	allInterfaceIps = append(allInterfaceIps, "0.0.0.0")
+
+	ipSelector := widget.NewSelect(allInterfaceIps, func(strVal string) {
+		err := portEntry.Validate()
+		if err != nil {
+			ipPortSetLabel.SetText("")
+			return
+		}
+		ipPortSetLabel.SetText(fmt.Sprintf("http://%s:%s", strVal, portEntry.Text))
+	})
+	portEntry.OnChanged = func(strVal string) {
+		err := portEntry.Validate()
+		if err != nil {
+			ipPortSetLabel.SetText("")
+			return
+		}
+		if ipSelector.Selected == "" {
+			ipPortSetLabel.SetText("")
+			return
+		}
+		ipPortSetLabel.SetText(fmt.Sprintf("http://%s:%s", ipSelector.Selected, strVal))
+	}
+
+	startServerButton := widget.NewButton("run", func() {
+
+	})
+
+	return container.NewVBox(
+		widget.NewSeparator(),
+		widget.NewLabelWithStyle("Select File Directory:",
+			fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}),
+		container.NewBorder(nil, nil,
+			directorySetLabel,
+			widget.NewButton("open folder", func() {
+				dialog.ShowFolderOpen(func(list fyne.ListableURI, err error) {
+					if err != nil {
+						dialog.ShowError(err, win)
+						return
+					}
+					if list == nil {
+						return
+					}
+					if len(list.String()) >= 7 && list.String()[0:7] == "file://" {
+						directorySetLabel.SetText(list.String()[7:])
+					} else {
+						directorySetLabel.SetText(list.String())
+					}
+				}, win)
+			}),
+		),
+		widget.NewSeparator(),
+		widget.NewLabelWithStyle("Set IP/Port and Start Web Server:",
+			fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}),
+		container.NewHBox(ipSelector, widget.NewLabel(":"), portEntry),
+
+		container.NewBorder(nil, nil, ipPortSetLabel, startServerButton),
 	)
 }

@@ -147,6 +147,9 @@ func networkWebServerScreen(win fyne.Window) fyne.CanvasObject {
 	}
 
 	startServerButton := widget.NewButton("run", func() {
+		if directorySetLabel.Text == "" || ipPortSetLabel.Text == "" {
+			return
+		}
 
 	})
 

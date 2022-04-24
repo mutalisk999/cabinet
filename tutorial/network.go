@@ -148,6 +148,10 @@ func networkWebServerScreen(win fyne.Window) fyne.CanvasObject {
 		ipPortSetLabel.SetText(fmt.Sprintf("http://%s:%s", ipSelector.Selected, strVal))
 	}
 
+	// default value
+	ipSelector.Selected = "0.0.0.0"
+	portEntry.Text = "30000"
+
 	startServerButton := widget.NewButton("run", func() {
 		if directorySetLabel.Text == "" || ipPortSetLabel.Text == "" {
 			return
@@ -195,7 +199,7 @@ func networkWebServerScreen(win fyne.Window) fyne.CanvasObject {
 		container.NewBorder(nil, nil,
 			directorySetLabel,
 			widget.NewButton("open folder", func() {
-				dialog.ShowFolderOpen(func(list fyne.ListableURI, err error) {
+				folderOpen := dialog.NewFolderOpen(func(list fyne.ListableURI, err error) {
 					if err != nil {
 						dialog.ShowError(err, win)
 						return
@@ -209,10 +213,12 @@ func networkWebServerScreen(win fyne.Window) fyne.CanvasObject {
 						directorySetLabel.SetText(list.String())
 					}
 				}, win)
+				folderOpen.Resize(fyne.Size{Width: 800, Height: 600})
+				folderOpen.Show()
 			}),
 		),
 		widget.NewSeparator(),
-		widget.NewLabelWithStyle("Set IP/Port and Start Web Server:",
+		widget.NewLabelWithStyle("Set IP/Port (port allowed section: [30000, 59999]) and Start Web Server:",
 			fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}),
 		container.NewHBox(ipSelector, widget.NewLabel(":"), portEntry),
 

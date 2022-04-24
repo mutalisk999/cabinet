@@ -182,6 +182,9 @@ type portEntry struct {
 func NewPortEntry() *portEntry {
 	e := &portEntry{}
 	e.ExtendBaseWidget(e)
-	e.Validator = validation.NewRegexp(`^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$`, "Choose port [1-65535] not in use")
+
+	// port allowed section: [30000, 59999]
+	//e.Validator = validation.NewRegexp(`^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$`, "Choose port not in use from 1-65535")
+	e.Validator = validation.NewRegexp(`^[345][0-9]{4}$`, "Choose port not in use from 30000-59999")
 	return e
 }

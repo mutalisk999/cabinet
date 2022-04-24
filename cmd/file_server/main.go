@@ -27,7 +27,6 @@ func main() {
 	server := http.Server{Addr: *endpoint, Handler: mux}
 	err := server.ListenAndServe()
 	if err != nil {
-		log.Fatalln(err.Error())
+		log.Fatalf(err.Error())
 	}
-	select {}
 }

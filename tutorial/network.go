@@ -11,6 +11,8 @@ import (
 	"io/ioutil"
 	"net"
 	"net/http"
+	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -151,6 +153,39 @@ func networkWebServerScreen(win fyne.Window) fyne.CanvasObject {
 			return
 		}
 
+		_, err := exec.LookPath("file_server")
+		if err != nil {
+			dialog.ShowError(err, win)
+			return
+		}
+		go func() {
+			cmd := exec.Command("file_server",
+				"-e", fmt.Sprintf("%s:%s", ipSelector.Selected, portEntry.Text),
+				"-d", directorySetLabel.Text)
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+
+			err := cmd.Start()
+			if err != nil {
+				dialog.ShowError(err, win)
+				return
+			}
+
+			fyne.CurrentApp().SendNotification(&fyne.Notification{
+				Title:   "Info",
+				Content: fmt.Sprintf("file_server start, pid: %d", cmd.Process.Pid),
+			})
+			stat, err := cmd.Process.Wait()
+			if err != nil {
+				dialog.ShowError(err, win)
+				return
+			} else {
+				fyne.CurrentApp().SendNotification(&fyne.Notification{
+					Title:   "Info",
+					Content: fmt.Sprintf("file_server stopped, pid: %d, exit_code: %d", stat.Pid(), stat.ExitCode()),
+				})
+			}
+		}()
 	})
 
 	return container.NewVBox(

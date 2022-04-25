@@ -49,7 +49,15 @@ Cabinet is a tool set for coder powered by [fyne](https://github.com/fyne-io/fyn
     - ecdsa key pair
     - arithmetic expression calculator
     - markdown
-   
+
+
+### How To generate bundle.go
+```
+go get fyne.io/fyne/cmd/fyne
+fyne bundle FangZhengHeiTiJianTi.ttf > bundle.go
+```
+
+ 
 ### How To Build
 ```
 git clone https://github.com/mutalisk999/cabinet

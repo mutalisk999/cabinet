@@ -2,6 +2,7 @@ package tutorial
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -149,11 +150,11 @@ func networkWebServerScreen(win fyne.Window) fyne.CanvasObject {
 	}
 
 	// default value
-	ipSelector.Selected = "0.0.0.0"
 	portEntry.Text = "30000"
 
 	startServerButton := widget.NewButton("run", func() {
 		if directorySetLabel.Text == "" || ipPortSetLabel.Text == "" {
+			dialog.ShowError(errors.New("you need to set all of these: Dir/IP/Port"), win)
 			return
 		}
 

@@ -142,5 +142,6 @@ func main() {
 
 	cabWin.SetContent(vSplit)
 	cabWin.Resize(utils.WinSizeX2())
+	cabApp.Settings().SetTheme(utils.ThemeLight())
 	cabWin.ShowAndRun()
 }

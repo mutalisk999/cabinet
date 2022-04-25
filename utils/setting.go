@@ -2,7 +2,7 @@ package utils
 
 import (
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/theme"
+	"github.com/mutalisk999/cabinet/theme"
 )
 
 func WinSizeX1() fyne.Size {
@@ -18,7 +18,7 @@ func WinSizeX2() fyne.Size {
 }
 
 func ThemeDefault() fyne.Theme {
-	return theme.DefaultTheme()
+	return theme.LightTheme()
 }
 
 func ThemeDark() fyne.Theme {

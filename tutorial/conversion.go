@@ -21,13 +21,13 @@ func convertScreen(_ fyne.Window) fyne.CanvasObject {
 
 func baseConvertScreen(_ fyne.Window) fyne.CanvasObject {
 	binEntryValidated := utils.NewBinEntry()
-	binEntryValidated.SetPlaceHolder("Must contain a binary number")
+	binEntryValidated.SetPlaceHolder("Must be a binary number")
 	octEntryValidated := utils.NewOctEntry()
-	octEntryValidated.SetPlaceHolder("Must contain a octal number")
+	octEntryValidated.SetPlaceHolder("Must be a octal number")
 	decEntryValidated := utils.NewDecEntry()
-	decEntryValidated.SetPlaceHolder("Must contain a decimal number")
+	decEntryValidated.SetPlaceHolder("Must be a decimal number")
 	hexEntryValidated := utils.NewHexEntry()
-	hexEntryValidated.SetPlaceHolder("Must contain a hexadecimal number")
+	hexEntryValidated.SetPlaceHolder("Must be a hexadecimal number")
 
 	binEntryValidated.OnChanged = func(valStr string) {
 		val, ok := new(big.Int).SetString(valStr, 2)
@@ -112,13 +112,13 @@ func baseConvertScreen(_ fyne.Window) fyne.CanvasObject {
 
 func timeConvertScreen(_ fyne.Window) fyne.CanvasObject {
 	timestampEntryValidated := utils.NewTimestampEntry()
-	timestampEntryValidated.SetPlaceHolder("Must contain a timestamp number")
+	timestampEntryValidated.SetPlaceHolder("Must be a timestamp number")
 
 	utcDateTimeEntryValidated := utils.NewDateTimeEntry()
-	utcDateTimeEntryValidated.SetPlaceHolder("Must contain a date time string, such as 1970/01/01 00:00:00")
+	utcDateTimeEntryValidated.SetPlaceHolder("Must be a date time string, such as 1970/01/01 00:00:00")
 
 	localDateTimeEntryValidated := utils.NewDateTimeEntry()
-	localDateTimeEntryValidated.SetPlaceHolder("Must contain a date time string, such as 1970/01/01 00:00:00")
+	localDateTimeEntryValidated.SetPlaceHolder("Must be a date time string, such as 1970/01/01 00:00:00")
 
 	timestampEntryValidated.OnChanged = func(valStr string) {
 		if timestampEntryValidated.Validate() != nil {
@@ -209,13 +209,14 @@ func timeConvertScreen(_ fyne.Window) fyne.CanvasObject {
 
 func caseConvertScreen(_ fyne.Window) fyne.CanvasObject {
 	caseOriginEntryValidated := utils.NewCaseOriginEntry()
-	caseOriginEntryValidated.SetPlaceHolder("Must contain a string contains numbers/alphabets/underscore character/space character")
+	caseOriginEntryValidated.SetPlaceHolder("Must be a string contains numbers/alphabets/underscore character/space character")
 
 	radioGroup := widget.NewRadioGroup([]string{
 		"UPPER CASE", "lower case", "Capital case", "Title Case",
 		"camelCase", "PascalCase", "snake_case", "CONSTANT_CASE"}, nil)
 	radioGroup.Horizontal = true
 	caseResultEntryValidated := utils.NewCaseResultEntry()
+	caseResultEntryValidated.SetPlaceHolder("This entry is for conversion result")
 
 	caseConvert := func(valStr string) {
 		if caseOriginEntryValidated.Validate() != nil {

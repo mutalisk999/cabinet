@@ -22,10 +22,12 @@ func networkScreen(_ fyne.Window) fyne.CanvasObject {
 }
 
 func networkGetIPScreen(_ fyne.Window) fyne.CanvasObject {
-	externalIPEntryValidated := widget.NewMultiLineEntry()
-	externalIPEntryValidated.Wrapping = fyne.TextWrapWord
-	deviceIfIPEntryValidated := widget.NewMultiLineEntry()
-	deviceIfIPEntryValidated.Wrapping = fyne.TextWrapWord
+	externalIPEntry := widget.NewMultiLineEntry()
+	externalIPEntry.Wrapping = fyne.TextWrapWord
+	externalIPEntry.SetPlaceHolder("This entry is for information of external ip")
+	deviceIfIPEntry := widget.NewMultiLineEntry()
+	deviceIfIPEntry.Wrapping = fyne.TextWrapWord
+	deviceIfIPEntry.SetPlaceHolder("This entry is for information of device local ip")
 
 	return container.NewVBox(
 		widget.NewSeparator(),
@@ -41,17 +43,17 @@ func networkGetIPScreen(_ fyne.Window) fyne.CanvasObject {
 					}
 					resp, err := client.Get("https://ipinfo.io/")
 					if err != nil {
-						externalIPEntryValidated.SetText(err.Error())
+						externalIPEntry.SetText(err.Error())
 						return
 					}
 					if resp.StatusCode != 200 {
-						externalIPEntryValidated.SetText(resp.Status)
+						externalIPEntry.SetText(resp.Status)
 						return
 					}
 					defer resp.Body.Close()
 					body, err := ioutil.ReadAll(resp.Body)
 					if err != nil {
-						externalIPEntryValidated.SetText(err.Error())
+						externalIPEntry.SetText(err.Error())
 						return
 					}
 
@@ -67,17 +69,17 @@ func networkGetIPScreen(_ fyne.Window) fyne.CanvasObject {
 					var ipInfo IpInfo
 					err = json.Unmarshal(body, &ipInfo)
 					if err != nil {
-						externalIPEntryValidated.SetText(err.Error())
+						externalIPEntry.SetText(err.Error())
 						return
 					}
-					externalIPEntryValidated.SetText(fmt.Sprintf(
+					externalIPEntry.SetText(fmt.Sprintf(
 						"ip: %s        city: %s        region: %s        country: %s\n"+
 							"loc: %s        timezone: %s\n"+
 							"org: %s",
 						ipInfo.Ip, ipInfo.City, ipInfo.Region, ipInfo.Country, ipInfo.Loc, ipInfo.Timezone, ipInfo.Org))
 				}()
 			})),
-			externalIPEntryValidated, nil, nil),
+			externalIPEntry, nil, nil),
 		widget.NewSeparator(),
 		container.NewBorder(container.NewBorder(nil, nil,
 			widget.NewLabelWithStyle("Get Device Interface IP:",
@@ -86,7 +88,7 @@ func networkGetIPScreen(_ fyne.Window) fyne.CanvasObject {
 				ipsInfoText := ""
 				interfaceAddrs, err := net.InterfaceAddrs()
 				if err != nil {
-					deviceIfIPEntryValidated.SetText(err.Error())
+					deviceIfIPEntry.SetText(err.Error())
 				}
 				for _, addr := range interfaceAddrs {
 					ipNet, isValidIpNet := addr.(*net.IPNet)
@@ -96,9 +98,9 @@ func networkGetIPScreen(_ fyne.Window) fyne.CanvasObject {
 						ipsInfoText = strings.Join([]string{ipsInfoText, ipInfoText}, "")
 					}
 				}
-				deviceIfIPEntryValidated.SetText(ipsInfoText)
+				deviceIfIPEntry.SetText(ipsInfoText)
 			})),
-			deviceIfIPEntryValidated, nil, nil),
+			deviceIfIPEntry, nil, nil),
 	)
 }
 
@@ -106,7 +108,53 @@ func networkIPMaskScreen(_ fyne.Window) fyne.CanvasObject {
 	// ip + mask bit -> mask / network ip/ broadcast ip / first valid ip / last valid ip
 	// mask bit -> mask / ip count / valid ip count
 	// ip count needed -> mask bit / mask / valid ip count
-	return container.NewMax()
+	IPv4Entry := utils.NewIPv4Entry()
+	MaskBitEntry := utils.NewMaskBitEntry()
+	MaskBitEntry2 := utils.NewMaskBitEntry()
+	NumberEntry := utils.NewNumberEntry()
+
+	IPMaskBitCalcResultEntry := widget.NewMultiLineEntry()
+	IPMaskBitCalcResultEntry.Wrapping = fyne.TextWrapWord
+	IPMaskBitCalcResultEntry.SetPlaceHolder("This entry is for calculated result of ip/mask bit")
+	MaskBitCalcResultEntry := widget.NewMultiLineEntry()
+	MaskBitCalcResultEntry.Wrapping = fyne.TextWrapWord
+	MaskBitCalcResultEntry.SetPlaceHolder("This entry is for calculated result of mask bit")
+	IPCountNeedCalcResultEntry := widget.NewMultiLineEntry()
+	IPCountNeedCalcResultEntry.Wrapping = fyne.TextWrapWord
+	IPCountNeedCalcResultEntry.SetPlaceHolder("This entry is for calculated result of ip count you needed")
+
+	return container.NewVBox(
+		widget.NewSeparator(),
+		widget.NewLabelWithStyle("IP/MaskBit Calculator:",
+			fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}),
+		container.NewBorder(nil, nil,
+			container.NewHBox(IPv4Entry, widget.NewLabel("/"), MaskBitEntry, widget.NewLabel("[0-30]")),
+			widget.NewButton("calculate", func() {
+
+			}),
+		),
+		IPMaskBitCalcResultEntry,
+		widget.NewSeparator(),
+		widget.NewLabelWithStyle("MaskBit Calculator:",
+			fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}),
+		container.NewBorder(nil, nil,
+			container.NewHBox(MaskBitEntry2, widget.NewLabel("[0-30]")),
+			widget.NewButton("calculate", func() {
+
+			}),
+		),
+		MaskBitCalcResultEntry,
+		widget.NewSeparator(),
+		widget.NewLabelWithStyle("IP count you need:",
+			fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}),
+		container.NewBorder(nil, nil,
+			NumberEntry,
+			widget.NewButton("calculate", func() {
+
+			}),
+		),
+		IPCountNeedCalcResultEntry,
+	)
 }
 
 func networkWebServerScreen(win fyne.Window) fyne.CanvasObject {

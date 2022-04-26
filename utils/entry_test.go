@@ -21,3 +21,11 @@ func TestNewRegexMatch2(t *testing.T) {
 	ok := expression.MatchString(text)
 	fmt.Println("match:", ok)
 }
+
+func TestNewRegexMatch3(t *testing.T) {
+	regexTpl := `^((([0-9])|([1-9]\d)|(1\d{2})|(2[0-4]\d)|(25[0-5]))\.){3}(([0-9])|([1-9]\d)|(1\d{2})|(2[0-4]\d)|(25[0-5]))$`
+	text := "0.255.10.0"
+	expression, _ := regexp.Compile(regexTpl)
+	ok := expression.MatchString(text)
+	fmt.Println("match:", ok)
+}

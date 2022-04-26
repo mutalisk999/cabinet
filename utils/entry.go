@@ -15,7 +15,7 @@ func NewBinEntry() *binEntry {
 	e.MultiLine = true
 	e.Wrapping = fyne.TextWrapBreak
 	e.ExtendBaseWidget(e)
-	e.Validator = validation.NewRegexp(`^[01]*$`, "Must contain a binary number")
+	e.Validator = validation.NewRegexp(`^[01]*$`, "Must be a binary number")
 	return e
 }
 
@@ -28,7 +28,7 @@ func NewOctEntry() *octEntry {
 	e.MultiLine = true
 	e.Wrapping = fyne.TextWrapBreak
 	e.ExtendBaseWidget(e)
-	e.Validator = validation.NewRegexp(`^[0-7]*$`, "Must contain a octal number")
+	e.Validator = validation.NewRegexp(`^[0-7]*$`, "Must be a octal number")
 	return e
 }
 
@@ -41,7 +41,7 @@ func NewDecEntry() *decEntry {
 	e.MultiLine = true
 	e.Wrapping = fyne.TextWrapBreak
 	e.ExtendBaseWidget(e)
-	e.Validator = validation.NewRegexp(`^[0-9]*$`, "Must contain a decimal number")
+	e.Validator = validation.NewRegexp(`^[0-9]*$`, "Must be a decimal number")
 	return e
 }
 
@@ -54,7 +54,7 @@ func NewHexEntry() *hexEntry {
 	e.MultiLine = true
 	e.Wrapping = fyne.TextWrapBreak
 	e.ExtendBaseWidget(e)
-	e.Validator = validation.NewRegexp(`^[0-9a-fA-F]*$`, "Must contain a hexadecimal number")
+	e.Validator = validation.NewRegexp(`^[0-9a-fA-F]*$`, "Must be a hexadecimal number")
 	return e
 }
 
@@ -65,7 +65,7 @@ type timestampEntry struct {
 func NewTimestampEntry() *timestampEntry {
 	e := &timestampEntry{}
 	e.ExtendBaseWidget(e)
-	e.Validator = validation.NewRegexp(`^[0-9]{1,11}$`, "Must contain a timestamp number")
+	e.Validator = validation.NewRegexp(`^[0-9]{1,11}$`, "Must be a timestamp number")
 	return e
 }
 
@@ -146,7 +146,7 @@ func NewDateTimeEntry() *dateTimeEntry {
 	// use strict date time format
 	//dateTimeRegexPattern := `^[1-9][0-9]{3}/(0?[1-9]|1[0-2])/(0?[1-9]|[12][0-9]|3[01]) ([01]?[0-9]|2[0-3]):[0-5]?[0-9]:[0-5]?[0-9]$`
 	dateTimeRegexPattern := `^[1-9][0-9]{3}/(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01]) ([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$`
-	e.Validator = validation.NewRegexp(dateTimeRegexPattern, "Must contain a date time string, such as 1970/01/01 00:00:00")
+	e.Validator = validation.NewRegexp(dateTimeRegexPattern, "Must be a date time string, such as 1970/01/01 00:00:00")
 	return e
 }
 
@@ -159,7 +159,7 @@ func NewCaseOriginEntry() *caseOriginEntry {
 	e.MultiLine = true
 	e.Wrapping = fyne.TextWrapBreak
 	e.ExtendBaseWidget(e)
-	e.Validator = validation.NewRegexp(`^[0-9a-zA-Z_ ]*$`, "Must contain a string contains numbers/alphabets/underscore character/space character")
+	e.Validator = validation.NewRegexp(`^[0-9a-zA-Z_ ]*$`, "Must be a string contains numbers/alphabets/underscore character/space character")
 	return e
 }
 
@@ -184,7 +184,34 @@ func NewPortEntry() *portEntry {
 	e.ExtendBaseWidget(e)
 
 	// port allowed section: [30000, 59999]
-	//e.Validator = validation.NewRegexp(`^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$`, "Choose port not in use from 1-65535")
-	e.Validator = validation.NewRegexp(`^[345][0-9]{4}$`, "Choose port not in use from 30000-59999")
+	//e.Validator = validation.NewRegexp(`^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$`, "Choose port not in use from 1 to 65535")
+	e.Validator = validation.NewRegexp(`^[345][0-9]{4}$`, "Choose port not in use from 30000 to 59999")
+	return e
+}
+
+func NewIPv4Entry() *caseResultEntry {
+	e := &caseResultEntry{}
+	e.MultiLine = false
+	e.Wrapping = fyne.TextWrapOff
+	e.ExtendBaseWidget(e)
+	e.Validator = validation.NewRegexp(`^((([0-9])|([1-9]\d)|(1\d{2})|(2[0-4]\d)|(25[0-5]))\.){3}(([0-9])|([1-9]\d)|(1\d{2})|(2[0-4]\d)|(25[0-5]))$`, "Must be a IP V4 address")
+	return e
+}
+
+func NewMaskBitEntry() *caseResultEntry {
+	e := &caseResultEntry{}
+	e.MultiLine = false
+	e.Wrapping = fyne.TextWrapOff
+	e.ExtendBaseWidget(e)
+	e.Validator = validation.NewRegexp("^([0-9]|[12][0-9]|30)$", "Must be a MaskBit number from 0 to 30")
+	return e
+}
+
+func NewNumberEntry() *caseResultEntry {
+	e := &caseResultEntry{}
+	e.MultiLine = false
+	e.Wrapping = fyne.TextWrapOff
+	e.ExtendBaseWidget(e)
+	e.Validator = validation.NewRegexp("^([0-9]|[1-9][0-9]{1,})$", "Must be a MaskBit number from 0 to 30")
 	return e
 }

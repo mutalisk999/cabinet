@@ -51,7 +51,7 @@ Cabinet is a tool set for coder powered by [fyne](https://github.com/fyne-io/fyn
     - markdown
 
 
-### How To generate bundle.go
+### How To Generate bundle.go
 ```
 go get fyne.io/fyne/cmd/fyne
 fyne bundle FangZhengHeiTiJianTi.ttf > bundle.go

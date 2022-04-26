@@ -108,52 +108,52 @@ func networkIPMaskScreen(_ fyne.Window) fyne.CanvasObject {
 	// ip + mask bit -> mask / network ip/ broadcast ip / first valid ip / last valid ip
 	// mask bit -> mask / ip count / valid ip count
 	// ip count needed -> mask bit / mask / valid ip count
-	IPv4Entry := utils.NewIPv4Entry()
-	MaskBitEntry := utils.NewMaskBitEntry()
-	MaskBitEntry2 := utils.NewMaskBitEntry()
-	NumberEntry := utils.NewNumberEntry()
+	ipv4Entry := utils.NewIPv4Entry()
+	maskBitEntry := utils.NewMaskBitEntry()
+	maskBitEntry2 := utils.NewMaskBitEntry()
+	numberEntry := utils.NewNumberEntry()
 
-	IPMaskBitCalcResultEntry := widget.NewMultiLineEntry()
-	IPMaskBitCalcResultEntry.Wrapping = fyne.TextWrapWord
-	IPMaskBitCalcResultEntry.SetPlaceHolder("This entry is for calculated result of ip/mask bit")
-	MaskBitCalcResultEntry := widget.NewMultiLineEntry()
-	MaskBitCalcResultEntry.Wrapping = fyne.TextWrapWord
-	MaskBitCalcResultEntry.SetPlaceHolder("This entry is for calculated result of mask bit")
-	IPCountNeedCalcResultEntry := widget.NewMultiLineEntry()
-	IPCountNeedCalcResultEntry.Wrapping = fyne.TextWrapWord
-	IPCountNeedCalcResultEntry.SetPlaceHolder("This entry is for calculated result of ip count you needed")
+	ipMaskBitCalcResultEntry := widget.NewMultiLineEntry()
+	ipMaskBitCalcResultEntry.Wrapping = fyne.TextWrapWord
+	ipMaskBitCalcResultEntry.SetPlaceHolder("This entry is for calculated result of ip/mask bit")
+	maskBitCalcResultEntry := widget.NewMultiLineEntry()
+	maskBitCalcResultEntry.Wrapping = fyne.TextWrapWord
+	maskBitCalcResultEntry.SetPlaceHolder("This entry is for calculated result of mask bit")
+	ipCountNeedCalcResultEntry := widget.NewMultiLineEntry()
+	ipCountNeedCalcResultEntry.Wrapping = fyne.TextWrapWord
+	ipCountNeedCalcResultEntry.SetPlaceHolder("This entry is for calculated result of ip count you needed")
 
 	return container.NewVBox(
 		widget.NewSeparator(),
 		widget.NewLabelWithStyle("IP/MaskBit Calculator:",
 			fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}),
 		container.NewBorder(nil, nil,
-			container.NewHBox(IPv4Entry, widget.NewLabel("/"), MaskBitEntry, widget.NewLabel("[0-30]")),
+			container.NewHBox(ipv4Entry, widget.NewLabel("/"), maskBitEntry, widget.NewLabel("[0-30]")),
 			widget.NewButton("calculate", func() {
 
 			}),
 		),
-		IPMaskBitCalcResultEntry,
+		ipMaskBitCalcResultEntry,
 		widget.NewSeparator(),
 		widget.NewLabelWithStyle("MaskBit Calculator:",
 			fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}),
 		container.NewBorder(nil, nil,
-			container.NewHBox(MaskBitEntry2, widget.NewLabel("[0-30]")),
+			container.NewHBox(maskBitEntry2, widget.NewLabel("[0-30]")),
 			widget.NewButton("calculate", func() {
 
 			}),
 		),
-		MaskBitCalcResultEntry,
+		maskBitCalcResultEntry,
 		widget.NewSeparator(),
 		widget.NewLabelWithStyle("IP count you need:",
 			fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}),
 		container.NewBorder(nil, nil,
-			NumberEntry,
+			numberEntry,
 			widget.NewButton("calculate", func() {
 
 			}),
 		),
-		IPCountNeedCalcResultEntry,
+		ipCountNeedCalcResultEntry,
 	)
 }
 

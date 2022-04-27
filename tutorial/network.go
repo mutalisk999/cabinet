@@ -9,11 +9,14 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"github.com/mutalisk999/cabinet/utils"
+	"github.com/seancfoley/ipaddress-go/ipaddr"
 	"io/ioutil"
+	"math"
 	"net"
 	"net/http"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 )
 
@@ -130,7 +133,36 @@ func networkIPMaskScreen(_ fyne.Window) fyne.CanvasObject {
 		container.NewBorder(nil, nil,
 			container.NewHBox(ipv4Entry, widget.NewLabel("/"), maskBitEntry, widget.NewLabel("[0-30]")),
 			widget.NewButton("calculate", func() {
-
+				cidrStr := fmt.Sprintf("%s/%s", ipv4Entry.Text, maskBitEntry.Text)
+				_, ipNet, err := net.ParseCIDR(cidrStr)
+				if err != nil {
+					ipMaskBitCalcResultEntry.SetText(err.Error())
+				}
+				if ipNet == nil {
+					return
+				}
+				newIpNet, err := ipaddr.NewIPAddressFromNetIPNet(*ipNet)
+				if err != nil {
+					ipMaskBitCalcResultEntry.SetText(err.Error())
+				}
+				if newIpNet == nil {
+					return
+				}
+				ipBroadCast, err := newIpNet.ToIPv4().ToBroadcastAddress()
+				if err != nil {
+					ipMaskBitCalcResultEntry.SetText(err.Error())
+				}
+				if ipBroadCast == nil {
+					return
+				}
+				mask, _ := strconv.Atoi(maskBitEntry.Text)
+				calcResultText := fmt.Sprintf("ip: %s      mask: %s      network: %s      broadcast: %s\nfirst valid ip: %s      last valid ip: %s      valid ip count: %d",
+					ipv4Entry.Text, net.IP(ipNet.Mask).String(),
+					ipNet.IP.String(), ipBroadCast.GetNetIP().String(),
+					newIpNet.GetLowerIPAddress().GetNetIP().String(),
+					newIpNet.GetUpperIPAddress().GetNetIP().String(),
+					int(math.Pow(2, float64(32-mask)))-2)
+				ipMaskBitCalcResultEntry.SetText(calcResultText)
 			}),
 		),
 		ipMaskBitCalcResultEntry,
@@ -140,7 +172,10 @@ func networkIPMaskScreen(_ fyne.Window) fyne.CanvasObject {
 		container.NewBorder(nil, nil,
 			container.NewHBox(maskBitEntry2, widget.NewLabel("[0-30]")),
 			widget.NewButton("calculate", func() {
-
+				mask, _ := strconv.Atoi(maskBitEntry2.Text)
+				maskLong := 0xffffffff >> (32 - mask) << (32 - mask)
+				ipV4Mask := net.IPv4Mask(byte(maskLong>>24), byte((maskLong&0x00ff0000)>>16), byte((maskLong&0x0000ff00)>>8), byte(maskLong&0x000000ff))
+				_ = ipV4Mask
 			}),
 		),
 		maskBitCalcResultEntry,

@@ -94,7 +94,7 @@ func networkGetIPScreen(_ fyne.Window) fyne.CanvasObject {
 					ipNet, isValidIpNet := addr.(*net.IPNet)
 					if isValidIpNet && ipNet.IP.To4() != nil {
 						ipInfoText := fmt.Sprintf("ip: %s      mask: %s      network: %s\n",
-							ipNet.IP.String(), ipNet.Mask.String(), ipNet.IP.Mask(ipNet.Mask).String())
+							ipNet.IP.String(), net.IP(ipNet.Mask).String(), ipNet.IP.Mask(ipNet.Mask).String())
 						ipsInfoText = strings.Join([]string{ipsInfoText, ipInfoText}, "")
 					}
 				}

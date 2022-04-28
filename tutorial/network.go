@@ -1,6 +1,7 @@
 package tutorial
 
 import (
+	"encoding/binary"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -9,7 +10,6 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"github.com/mutalisk999/cabinet/utils"
-	"github.com/seancfoley/ipaddress-go/ipaddr"
 	"io/ioutil"
 	"math"
 	"net"
@@ -133,35 +133,42 @@ func networkIPMaskScreen(_ fyne.Window) fyne.CanvasObject {
 		container.NewBorder(nil, nil,
 			container.NewHBox(ipv4Entry, widget.NewLabel("/"), maskBitEntry, widget.NewLabel("[0-30]")),
 			widget.NewButton("calculate", func() {
+				if ipv4Entry.Validate() != nil || maskBitEntry.Validate() != nil {
+					return
+				}
+
 				cidrStr := fmt.Sprintf("%s/%s", ipv4Entry.Text, maskBitEntry.Text)
 				_, ipNet, err := net.ParseCIDR(cidrStr)
 				if err != nil {
 					ipMaskBitCalcResultEntry.SetText(err.Error())
+					return
 				}
 				if ipNet == nil {
 					return
 				}
-				newIpNet, err := ipaddr.NewIPAddressFromNetIPNet(*ipNet)
-				if err != nil {
-					ipMaskBitCalcResultEntry.SetText(err.Error())
-				}
-				if newIpNet == nil {
-					return
-				}
-				ipBroadCast, err := newIpNet.ToIPv4().ToBroadcastAddress()
-				if err != nil {
-					ipMaskBitCalcResultEntry.SetText(err.Error())
-				}
-				if ipBroadCast == nil {
-					return
-				}
+
 				mask, _ := strconv.Atoi(maskBitEntry.Text)
-				calcResultText := fmt.Sprintf("ip: %s      mask: %s      network: %s      broadcast: %s\nfirst valid ip: %s      last valid ip: %s      valid ip count: %d",
-					ipv4Entry.Text, net.IP(ipNet.Mask).String(),
-					ipNet.IP.String(), ipBroadCast.GetNetIP().String(),
-					newIpNet.GetLowerIPAddress().GetNetIP().String(),
-					newIpNet.GetUpperIPAddress().GetNetIP().String(),
-					int(math.Pow(2, float64(32-mask)))-2)
+				ipNetCount := int(math.Pow(2, float64(32-mask)))
+
+				ipNetBytes := ipNet.IP
+				ipNetUint32 := binary.BigEndian.Uint32(ipNetBytes)
+				ipBroadCastUint32 := ipNetUint32 + uint32(ipNetCount) - 1
+				ipNetFirstUint32 := ipNetUint32 + 1
+				ipNetLastUint32 := ipBroadCastUint32 - 1
+
+				ipBroadCastBytes := make([]byte, 4)
+				ipNetFirstBytes := make([]byte, 4)
+				ipNetLastBytes := make([]byte, 4)
+				binary.BigEndian.PutUint32(ipBroadCastBytes, ipBroadCastUint32)
+				binary.BigEndian.PutUint32(ipNetFirstBytes, ipNetFirstUint32)
+				binary.BigEndian.PutUint32(ipNetLastBytes, ipNetLastUint32)
+
+				calcResultText := fmt.Sprintf("ip: %s      mask: %s      network: %s      broadcast: %s\nfirst valid ip: %s      last valid ip: %s\nvalid ip count: %d",
+					ipv4Entry.Text, net.IP(ipNet.Mask).String(), ipNet.IP.String(),
+					net.IPv4(ipBroadCastBytes[0], ipBroadCastBytes[1], ipBroadCastBytes[2], ipBroadCastBytes[3]).String(),
+					net.IPv4(ipNetFirstBytes[0], ipNetFirstBytes[1], ipNetFirstBytes[2], ipNetFirstBytes[3]).String(),
+					net.IPv4(ipNetLastBytes[0], ipNetLastBytes[1], ipNetLastBytes[2], ipNetLastBytes[3]).String(),
+					ipNetCount-2)
 				ipMaskBitCalcResultEntry.SetText(calcResultText)
 			}),
 		),
@@ -172,20 +179,55 @@ func networkIPMaskScreen(_ fyne.Window) fyne.CanvasObject {
 		container.NewBorder(nil, nil,
 			container.NewHBox(maskBitEntry2, widget.NewLabel("[0-30]")),
 			widget.NewButton("calculate", func() {
+				if maskBitEntry2.Validate() != nil {
+					return
+				}
+
 				mask, _ := strconv.Atoi(maskBitEntry2.Text)
+				ipNetCount := int(math.Pow(2, float64(32-mask)))
 				maskLong := 0xffffffff >> (32 - mask) << (32 - mask)
 				ipV4Mask := net.IPv4Mask(byte(maskLong>>24), byte((maskLong&0x00ff0000)>>16), byte((maskLong&0x0000ff00)>>8), byte(maskLong&0x000000ff))
-				_ = ipV4Mask
+
+				calcResultText2 := fmt.Sprintf("mask: %s\nvalid ip count: %d",
+					net.IP(ipV4Mask).String(), ipNetCount-2)
+				maskBitCalcResultEntry.SetText(calcResultText2)
 			}),
 		),
 		maskBitCalcResultEntry,
 		widget.NewSeparator(),
-		widget.NewLabelWithStyle("IP count you need:",
+		widget.NewLabelWithStyle("How many ips are needed:",
 			fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}),
 		container.NewBorder(nil, nil,
 			numberEntry,
 			widget.NewButton("calculate", func() {
+				if numberEntry.Validate() != nil {
+					return
+				}
 
+				ipNetCountFunc := func(val int) int {
+					s := 1
+					for {
+						if s >= val {
+							return s
+						} else {
+							s = s << 1
+						}
+					}
+				}
+				number, _ := strconv.Atoi(numberEntry.Text)
+				if number <= 0 || number > 100000000 {
+					numberEntry.SetText("number should be set in section 1-100000000")
+					return
+				}
+				// add network ip & broadcast ip
+				number = number + 2
+				ipNetCount := ipNetCountFunc(number)
+				maskLong := uint32(-ipNetCount)
+				ipV4Mask := net.IPv4Mask(byte(maskLong>>24), byte((maskLong&0x00ff0000)>>16), byte((maskLong&0x0000ff00)>>8), byte(maskLong&0x000000ff))
+
+				calcResultText3 := fmt.Sprintf("mask: %s\nvalid ip count: %d",
+					net.IP(ipV4Mask).String(), ipNetCount-2)
+				ipCountNeedCalcResultEntry.SetText(calcResultText3)
 			}),
 		),
 		ipCountNeedCalcResultEntry,

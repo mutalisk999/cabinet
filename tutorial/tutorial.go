@@ -102,7 +102,7 @@ var (
 			otherScreen},
 		"uuid": {"uuid",
 			"uuid",
-			convertScreen},
+			uuidScreen},
 		"random_pass": {"random_pass",
 			"random_pass",
 			convertScreen},

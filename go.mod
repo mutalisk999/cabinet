@@ -6,6 +6,6 @@ require (
 	fyne.io/fyne/v2 v2.1.4
 	github.com/atotto/clipboard v0.1.4
 	github.com/cleanmachine1/capitalise v0.0.0-20211202000658-6c2a2efcfe9e
+	github.com/google/uuid v1.3.0
 	github.com/iancoleman/strcase v0.2.0
-	github.com/seancfoley/ipaddress-go v1.1.2
 )

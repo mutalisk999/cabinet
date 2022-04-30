@@ -4,7 +4,9 @@
 ### What is cabinet
 Cabinet is a tool set for coder powered by [fyne](https://github.com/fyne-io/fyne).
 
-### Features of cabinet
+---
+
+### Features Supported
 - [x] conversion
     - [x] base convert (bin/oct/dec/hex)
     - [x] time convert (timestamp/utctime/localtime)
@@ -43,13 +45,14 @@ Cabinet is a tool set for coder powered by [fyne](https://github.com/fyne-io/fyn
     - [x] web server (static file web server)
 
 - [ ] other
-    - [ ] uuid (v1/v2/v3/v4)
+    - [x] uuid (v1/v2/v3/v4)
     - [ ] random password
     - [ ] rsa key pair
     - [ ] ecdsa key pair
     - [ ] arithmetic expression calculator
     - [ ] markdown
 
+---
 
 ### How To Generate bundle.go
 ```

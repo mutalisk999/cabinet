@@ -78,38 +78,40 @@ func uuidScreen(_ fyne.Window) fyne.CanvasObject {
 				fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}), generateCountEntry),
 			container.NewHBox(
 				widget.NewButton("generate", func() {
-					if generateCountEntry.Validate() != nil {
-						return
-					}
-					count, err := strconv.Atoi(generateCountEntry.Text)
-					if err != nil {
-						uuidGeneratedResultEntry.SetText(err.Error())
-						return
-					}
+					go func() {
+						if generateCountEntry.Validate() != nil {
+							return
+						}
+						count, err := strconv.Atoi(generateCountEntry.Text)
+						if err != nil {
+							uuidGeneratedResultEntry.SetText(err.Error())
+							return
+						}
 
-					uuidsTotal := make([]string, 0)
-					for i := 0; i < count; i++ {
-						u := ""
-						if uuidVersionSelect.Selected == "uuid 1" {
-							u1, err := uuid.NewUUID()
-							if err != nil {
-								uuidGeneratedResultEntry.SetText(err.Error())
-								return
+						uuidsTotal := make([]string, 0)
+						for i := 0; i < count; i++ {
+							u := ""
+							if uuidVersionSelect.Selected == "uuid 1" {
+								u1, err := uuid.NewUUID()
+								if err != nil {
+									uuidGeneratedResultEntry.SetText(err.Error())
+									return
+								}
+								u = u1.String()
+							} else if uuidVersionSelect.Selected == "uuid 4" {
+								u4 := uuid.New()
+								u = u4.String()
 							}
-							u = u1.String()
-						} else if uuidVersionSelect.Selected == "uuid 4" {
-							u4 := uuid.New()
-							u = u4.String()
+							if upperSlider.Value == upperSlider.Max {
+								u = strings.ToUpper(u)
+							}
+							if hyphenSlider.Value == hyphenSlider.Min {
+								u = strings.ReplaceAll(u, "-", "")
+							}
+							uuidsTotal = append(uuidsTotal, u)
 						}
-						if upperSlider.Value == upperSlider.Max {
-							u = strings.ToUpper(u)
-						}
-						if hyphenSlider.Value == hyphenSlider.Min {
-							u = strings.ReplaceAll(u, "-", "")
-						}
-						uuidsTotal = append(uuidsTotal, u)
-					}
-					uuidGeneratedResultEntry.SetText(strings.Join(uuidsTotal, "\n"))
+						uuidGeneratedResultEntry.SetText(strings.Join(uuidsTotal, "\n"))
+					}()
 				}),
 				widget.NewButton("copy", func() {
 					_ = clipboard.WriteAll(uuidGeneratedResultEntry.Text)

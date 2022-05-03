@@ -46,7 +46,7 @@ Cabinet is a tool set for coder powered by [fyne](https://github.com/fyne-io/fyn
 
 - [ ] other
     - [x] uuid (v1/v2/v3/v4)
-    - [ ] random password
+    - [x] random password
     - [ ] rsa key pair
     - [ ] ecdsa key pair
     - [ ] arithmetic expression calculator

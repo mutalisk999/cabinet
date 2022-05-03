@@ -105,7 +105,7 @@ var (
 			uuidScreen},
 		"random_pass": {"random_pass",
 			"random_pass",
-			convertScreen},
+			randomPasswordScreen},
 		"rsa_key_pair": {"rsa_key_pair",
 			"rsa_key_pair",
 			convertScreen},

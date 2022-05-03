@@ -29,3 +29,19 @@ func TestNewRegexMatch3(t *testing.T) {
 	ok := expression.MatchString(text)
 	fmt.Println("match:", ok)
 }
+
+func TestNewRegexMatch4(t *testing.T) {
+	regexTpl := `^([0-9a-zA-Z]|[!@#$%^&*])*$`
+	text := "abcd1234!@*$"
+	expression, _ := regexp.Compile(regexTpl)
+	ok := expression.MatchString(text)
+	fmt.Println("match:", ok)
+}
+
+func TestNewRegexMatch5(t *testing.T) {
+	regexTpl := `^([1-9]|[1-9][0-9]|100)$`
+	text := "90"
+	expression, _ := regexp.Compile(regexTpl)
+	ok := expression.MatchString(text)
+	fmt.Println("match:", ok)
+}

@@ -7,8 +7,10 @@ import (
 	"github.com/atotto/clipboard"
 	"github.com/google/uuid"
 	"github.com/mutalisk999/cabinet/utils"
+	"math/rand"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func otherScreen(_ fyne.Window) fyne.CanvasObject {
@@ -122,5 +124,93 @@ func uuidScreen(_ fyne.Window) fyne.CanvasObject {
 			),
 		),
 		uuidGeneratedResultEntry,
+	)
+}
+
+func randomPasswordScreen(_ fyne.Window) fyne.CanvasObject {
+	randomPassLabel := widget.NewLabelWithStyle("please set password generation rules:",
+		fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true})
+
+	includeCheckGroup := widget.NewCheckGroup([]string{"0-9", "a-z", "A-Z", "!@#$%^&*"}, nil)
+	includeCheckGroup.Horizontal = true
+	includeCheckGroup.SetSelected([]string{"0-9", "a-z", "A-Z"})
+
+	excludeSlider := widget.NewSlider(0, 1)
+	excludeSlider.Value = excludeSlider.Min
+
+	excludeEntry := utils.NewCharExcludeEntry()
+	excludeEntry.Text = "iIl1o0O"
+
+	passLengthEntry := utils.NewPassLengthEntry()
+	passLengthEntry.Text = "8"
+
+	passCountEntry := utils.NewPassCountEntry()
+	passCountEntry.Text = "1"
+
+	passGeneratedResultEntry := widget.NewMultiLineEntry()
+	passGeneratedResultEntry.Wrapping = fyne.TextWrapBreak
+	passGeneratedResultEntry.SetPlaceHolder("This entry is for generated result of random password")
+
+	return container.NewVBox(
+		widget.NewSeparator(),
+		randomPassLabel,
+		container.NewHBox(widget.NewLabel("include:"), includeCheckGroup),
+		container.NewBorder(nil, nil,
+			container.NewHBox(widget.NewLabel("exclude:"), excludeEntry),
+			excludeSlider),
+		container.NewHBox(widget.NewLabel("length:"), passLengthEntry, widget.NewLabel("[1-100]")),
+		container.NewHBox(widget.NewLabel("count:"), passCountEntry, widget.NewLabel("[1-1000]")),
+		container.NewBorder(nil, nil, nil,
+			container.NewHBox(
+				widget.NewButton("generate", func() {
+					go func() {
+						validChars := make([]byte, 0)
+						for _, selected := range includeCheckGroup.Selected {
+							if selected == "0-9" {
+								validChars = append(validChars, "0123456789"...)
+							} else if selected == "a-z" {
+								validChars = append(validChars, "abcdefghijklmnopqrstuvwxyz"...)
+							} else if selected == "A-Z" {
+								validChars = append(validChars, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"...)
+							} else if selected == "!@#$%^&*" {
+								validChars = append(validChars, "!@#$%^&*"...)
+							}
+						}
+						validCharsStr := string(validChars)
+						if excludeSlider.Value == excludeSlider.Max {
+							for _, chr := range excludeEntry.Text {
+								validCharsStr = strings.ReplaceAll(validCharsStr, string(chr), "")
+							}
+						}
+
+						if passLengthEntry.Validate() != nil {
+							return
+						}
+						if passCountEntry.Validate() != nil {
+							return
+						}
+						passLength, _ := strconv.Atoi(passLengthEntry.Text)
+						passCount, _ := strconv.Atoi(passCountEntry.Text)
+
+						rand.Seed(time.Now().UnixNano())
+						randomPassAll := make([]string, 0)
+						for i := 0; i < passCount; i++ {
+							randomPass := make([]byte, passLength)
+							for j := 0; j < passLength; j++ {
+								randomPass[j] = validCharsStr[rand.Intn(len(validCharsStr))]
+							}
+							randomPassAll = append(randomPassAll, string(randomPass))
+						}
+						passGeneratedResultEntry.SetText(strings.Join(randomPassAll, "\n"))
+					}()
+				}),
+				widget.NewButton("copy", func() {
+					_ = clipboard.WriteAll(passGeneratedResultEntry.Text)
+				}),
+				widget.NewButton("clear", func() {
+					passGeneratedResultEntry.SetText("")
+				})),
+		),
+		passGeneratedResultEntry,
 	)
 }

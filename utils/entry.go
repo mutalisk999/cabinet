@@ -212,6 +212,45 @@ func NewNumberEntry() *caseResultEntry {
 	e.MultiLine = false
 	e.Wrapping = fyne.TextWrapOff
 	e.ExtendBaseWidget(e)
-	e.Validator = validation.NewRegexp("^([0-9]|[1-9][0-9]{1,})$", "Must be a MaskBit number from 0 to 30")
+	e.Validator = validation.NewRegexp("^([0-9]|[1-9][0-9]{1,})$", "Must be a number value")
+	return e
+}
+
+type charExcludeEntry struct {
+	widget.Entry
+}
+
+func NewCharExcludeEntry() *charExcludeEntry {
+	e := &charExcludeEntry{}
+	e.MultiLine = false
+	e.Wrapping = fyne.TextWrapOff
+	e.ExtendBaseWidget(e)
+	e.Validator = validation.NewRegexp("^([0-9a-zA-Z]|[!@#$%^&*])*$", "Characters must be in 0-9a-zA-Z or in !@#$%^&*")
+	return e
+}
+
+type passLengthEntry struct {
+	widget.Entry
+}
+
+func NewPassLengthEntry() *passLengthEntry {
+	e := &passLengthEntry{}
+	e.MultiLine = false
+	e.Wrapping = fyne.TextWrapOff
+	e.ExtendBaseWidget(e)
+	e.Validator = validation.NewRegexp("^([1-9]|[1-9][0-9]|100)$", "Password length must be 1-100")
+	return e
+}
+
+type passCountEntry struct {
+	widget.Entry
+}
+
+func NewPassCountEntry() *passCountEntry {
+	e := &passCountEntry{}
+	e.MultiLine = false
+	e.Wrapping = fyne.TextWrapOff
+	e.ExtendBaseWidget(e)
+	e.Validator = validation.NewRegexp("^([1-9]|[1-9][0-9]{1,2}|1000)$", "Password count must be 1-1000")
 	return e
 }

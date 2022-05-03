@@ -115,7 +115,7 @@ func uuidScreen(_ fyne.Window) fyne.CanvasObject {
 						uuidGeneratedResultEntry.SetText(strings.Join(uuidsTotal, "\n"))
 					}()
 				}),
-				widget.NewButton("copy", func() {
+				widget.NewButton("copy to clipboard", func() {
 					_ = clipboard.WriteAll(uuidGeneratedResultEntry.Text)
 				}),
 				widget.NewButton("clear", func() {
@@ -128,7 +128,7 @@ func uuidScreen(_ fyne.Window) fyne.CanvasObject {
 }
 
 func randomPasswordScreen(_ fyne.Window) fyne.CanvasObject {
-	randomPassLabel := widget.NewLabelWithStyle("please set password generation rules:",
+	randomPassLabel := widget.NewLabelWithStyle("Please set password generation rules:",
 		fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true})
 
 	includeCheckGroup := widget.NewCheckGroup([]string{"0-9", "a-z", "A-Z", "!@#$%^&*"}, nil)
@@ -204,7 +204,7 @@ func randomPasswordScreen(_ fyne.Window) fyne.CanvasObject {
 						passGeneratedResultEntry.SetText(strings.Join(randomPassAll, "\n"))
 					}()
 				}),
-				widget.NewButton("copy", func() {
+				widget.NewButton("copy to clipboard", func() {
 					_ = clipboard.WriteAll(passGeneratedResultEntry.Text)
 				}),
 				widget.NewButton("clear", func() {

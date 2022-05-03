@@ -198,7 +198,7 @@ func networkIPMaskScreen(_ fyne.Window) fyne.CanvasObject {
 		widget.NewLabelWithStyle("How many ips are needed:",
 			fyne.TextAlignLeading, fyne.TextStyle{Bold: true, Italic: true}),
 		container.NewBorder(nil, nil,
-			numberEntry,
+			container.NewHBox(numberEntry, widget.NewLabel("[1-100000000]")),
 			widget.NewButton("calculate", func() {
 				if numberEntry.Validate() != nil {
 					return
@@ -216,7 +216,7 @@ func networkIPMaskScreen(_ fyne.Window) fyne.CanvasObject {
 				}
 				number, _ := strconv.Atoi(numberEntry.Text)
 				if number <= 0 || number > 100000000 {
-					numberEntry.SetText("number should be set in section 1-100000000")
+					ipCountNeedCalcResultEntry.SetText("number should be set in section 1-100000000")
 					return
 				}
 				// add network ip & broadcast ip

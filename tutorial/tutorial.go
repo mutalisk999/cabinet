@@ -27,7 +27,7 @@ var (
 			encodeScreen},
 		"base64_encode": {"base64_encode",
 			"base64_encode",
-			convertScreen},
+			base64EncodeScreen},
 		"url_encode": {"url_encode",
 			"url_encode",
 			convertScreen},

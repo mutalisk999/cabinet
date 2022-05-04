@@ -13,7 +13,7 @@ Cabinet is a tool set for coder powered by [fyne](https://github.com/fyne-io/fyn
     - [x] case convert (upper/lower/capital/capital(word)/camel/pascal/snake/constant)
 
 - [ ] encoder/decoder
-    - [ ] base64 (base16/base64/base58)
+    - [x] base64 (base16/base32/base64/base58/base85)
     - [ ] url
     - [ ] html
 

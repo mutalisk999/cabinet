@@ -215,6 +215,8 @@ func caseConvertScreen(_ fyne.Window) fyne.CanvasObject {
 		"UPPER CASE", "lower case", "Capital case", "Title Case",
 		"camelCase", "PascalCase", "snake_case", "CONSTANT_CASE"}, nil)
 	radioGroup.Horizontal = true
+	radioGroup.SetSelected("camelCase")
+
 	caseResultEntryValidated := utils.NewCaseResultEntry()
 	caseResultEntryValidated.SetPlaceHolder("This entry is for conversion result")
 

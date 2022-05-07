@@ -134,11 +134,11 @@ func main() {
 	viewBorder := container.NewBorder(container.NewVBox(title, widget.NewSeparator(), intro),
 		nil, nil, nil, content)
 	hSplit := container.NewHSplit(treeBorder, viewBorder)
-	hSplit.Offset = 0.1
+	hSplit.SetOffset(0.1)
 
 	buttons := makeToolBar(cabApp, cabWin)
 	vSplit := container.NewVSplit(buttons, hSplit)
-	vSplit.Offset = 0.05
+	vSplit.SetOffset(0.05)
 
 	cabWin.SetContent(vSplit)
 	cabWin.Resize(utils.WinSizeX2())

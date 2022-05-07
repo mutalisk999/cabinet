@@ -12,10 +12,10 @@ Cabinet is a tool set for coder powered by [fyne](https://github.com/fyne-io/fyn
     - [x] time convert (timestamp/utctime/localtime)
     - [x] case convert (upper/lower/capital/capital(word)/camel/pascal/snake/constant)
 
-- [ ] encoder/decoder
-    - [x] base64 (base16/base32/base64/base58/base85)
-    - [ ] url
-    - [ ] html
+- [x] encoder/decoder
+    - [x] base64 (base16/base32/base64/base58/base85) encode/decode
+    - [x] url escape/unescape
+    - [x] html escape/unescape
 
 - [ ] image
     - [ ] image format convert

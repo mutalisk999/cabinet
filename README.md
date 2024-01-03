@@ -5,10 +5,10 @@
 Cabinet is a tool set for coder powered by [fyne](https://github.com/fyne-io/fyne).
 
 light theme:
-[](https://github.com/mutalisk999/cabinet/blob/main/assets/light.png)
+![](https://github.com/mutalisk999/cabinet/blob/main/assets/light.png)
 
 dark theme:
-[](https://github.com/mutalisk999/cabinet/blob/main/assets/dark.png)
+![](https://github.com/mutalisk999/cabinet/blob/main/assets/dark.png)
 
 
 ---
